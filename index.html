@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas" width="100" height="100"></canvas>
+    <script>
+        let canvas = document.getElementById("canvas");
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight;
+        let ctx = canvas.getContext("2d");
+        ctx.fillStyle = "red";
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 8;
+        ctx.lineCap = "round";
+
+        let paintingFlag = false;
+        let lastPosition;
+        console.log(111111111);
+        var isTouchDevice = 'ontouchstart' in document.documentElement;
+        if (isTouchDevice){
+            canvas.ontouchstart = (e) =>{
+                console.log(22222);
+                console.log(e.touches);
+                console.log(22222);
+                lastPosition = [e.touches[0].clientX, e.touches[0].clientY];
+            }
+
+            canvas.ontouchmove = (e) =>{
+                drawLine(lastPosition[0], lastPosition[1], e.touches[0].clientX, e.touches[0].clientY);
+                lastPosition = [e.touches[0].clientX, e.touches[0].clientY];
+            }
+        } else {
+            canvas.onmousedown = (e) => {
+                paintingFlag = true;
+                console.log(33333);
+                console.log(e);
+                console.log(33333);
+                lastPosition = [e.clientX, e.clientY];
+            }
+
+            canvas.onmousemove = (e) => {
+                if (paintingFlag){
+                    drawLine(lastPosition[0], lastPosition[1], e.clientX, e.clientY);
+                    lastPosition = [e.clientX, e.clientY];
+                }
+            }
+
+            canvas.onmouseup = (e) => {
+                paintingFlag = false;
+            }
+        }
+
+        function drawLine(oldX, oldY, newX, newY) {
+            ctx.beginPath();
+            ctx.moveTo(oldX, oldY);
+            ctx.lineTo(newX, newY);
+            ctx.stroke();
+        }
+    </script>
+</body>
+</html>
